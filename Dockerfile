@@ -9,6 +9,7 @@ RUN npm install
 COPY . .
 
 RUN npm run build
+RUN npm prune --omit=dev && npm cache clean --force
 
 FROM node:24-alpine
 

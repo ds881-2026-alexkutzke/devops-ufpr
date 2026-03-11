@@ -34,6 +34,9 @@ $ docker network inspect network-da-silva
 
 # rodar container com a rede conectada (evita inserir a rede bridge padrão)
 $ docker run --rm --network=network-da-silva -p 3000:3000 -d api-da-silva:v1.0
+
+#comandos de volume:
+$ docker exec -it id-da-api bash
 ```
 
 ## possível correção de problema na falta de DNS configurado para o docker

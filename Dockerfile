@@ -1,24 +1,24 @@
 FROM node:24 AS build
 
 WORKDIR /usr/src/app
-
 COPY package*.json ./
-
-RUN npm install
-
+RUN npm ci
 COPY . .
-
 RUN npm run build
-RUN npm prune --omit=dev && npm cache clean --force
 
+# etapa só pra instalar deps de produção limpas
+FROM node:24 AS deps
+
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# imagem final
 FROM node:24-alpine
 
 WORKDIR /usr/src/app
-
-COPY --from=build usr/src/app/dist ./dist
-COPY --from=build usr/src/app/node_modules ./node_modules
-#daqui pra baixo é execução do projeto
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=deps /usr/src/app/node_modules ./node_modules
 
 EXPOSE 3000
-
 CMD ["npm", "run", "start"]
